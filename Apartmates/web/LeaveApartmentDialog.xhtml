@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <!-- Display a Confirmation Dialog in which the user enters his/her account password to confirm deletion -->
+        <p:dialog id="ApartmentLeaveDialog" widgetVar="ApartmentLeaveDialog" modal="true" resizable="false" 
+                  width="400" height="200" appendTo="@(body)" header="Leaving Apartment Confirmation">
+
+            <div align="center">
+                <h:form id="LeaveApartmentForm">
+                    
+                    <p:panel >
+                        <p:commandButton id="leave" value="Leave Apartment" action="#{ApartmentController.leaveApartment()}"
+                                         update=":LeaveApartmentForm" oncomplete="PF('ApartmentLeaveDialog').show()" icon="fa fa-sign-out" styleClass="commandButton">
+                        </p:commandButton>
+
+                        <p:commandButton id="cancel" value="Cancel" icon="fa fa-ban" styleClass="commandButton"
+                                         oncomplete="PF('ApartmentLeaveDialog').hide()" >
+                        </p:commandButton>
+                        <br/>
+                    </p:panel>
+                    <br/>
+                    <!-- Error messages will be shown here if any -->
+                    <p:messages id="msgs" showIcon="false"/>
+                    <h:outputLabel value="#{ApartmentController.statusMessage}" style="font-family: Arial, Helvetica, sans-serif; 
+                                   font-size: 12pt; font-style: normal; font-weight: normal; color: #FF0000;" />
+                    <!-- Since this page is not constructed based on siteTemplate.xhtml, we cannot use siteStyles.css -->
+                </h:form>
+            </div>
+        </p:dialog>
+
+    </ui:composition>
+</html>

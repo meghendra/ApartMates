@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!-- This page is constructed based on the siteTemplate -->
+    <ui:composition template="/template/siteTemplate.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="Build Grocery List"></h:outputText>
+        </ui:define>
+
+        <!-- Create the content for this page below -->
+        <ui:define name="editableContent">
+            <div style="width: 80%;margin-top: 140px;margin-bottom: 0; margin-left: auto; margin-right: auto; display: block;min-width: 1500px;">
+                <c:if test="#{RoommateController.isLoggedIn() == true}">
+                    <h:panelGrid columns="3">
+                        <h:form id="GroceryListForm" styleClass="ui-datatable-data">
+                            <p:panelGrid columns="2" columnClasses="columnOne, columnTwo">
+                                <f:facet name="header">
+                                    <h:outputText value="Enter recipe names to build grocery list" style="font-size:15px;"/>
+                                </f:facet> 
+                                <p:outputLabel value="Recipe name 1:" for="recepieName1" />
+                                <p:inputText id="recepieName1" value="#{recepiesController.searchItem1}" required="false">
+                                </p:inputText>
+                                <p:outputLabel value="Recipe name 2:" for="recepieName2" />
+                                <p:inputText id="recepieName2" value="#{recepiesController.searchItem2}" required="false">
+                                </p:inputText>
+                                <p:outputLabel value="Recipe name 3:" for="recepieName3" />
+                                <p:inputText id="recepieName3" value="#{recepiesController.searchItem3}" required="false">
+                                </p:inputText>
+                                <p:outputLabel value="Recipe name 4:" for="recepieName4" />
+                                <p:inputText id="recepieName4" value="#{recepiesController.searchItem4}" required="false">
+                                </p:inputText>
+                                <p:outputLabel value="Recipe name 5:" for="recepieName5" />
+                                <p:inputText id="recepieName5" value="#{recepiesController.searchItem5}" required="false">
+                                </p:inputText>
+                                <h:panelGroup>
+                                    <div align="center">
+                                        <p:commandButton action="#{recepiesController.destroy()}" value="Cancel" icon="ui-icon-cancel" styleClass="commandButton"/>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <div align="center">
+                                        <p:commandButton actionListener="#{recepiesController.search()}" value="Search recipes" styleClass="commandButton" icon="ui-icon-disk" ajax="false">
+                                            <f:ajax execute="search" render="output"></f:ajax>
+                                        </p:commandButton>
+                                    </div>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:form>
+                        <h:panelGroup id="output">
+                            <p:dataScroller  rendered="#{not empty recepiesController.foundRecipes}" value="#{recepiesController.foundRecipes}"  var="recepie" chunkSize="10" rowIndexVar="#{recepie.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="Recipes found" style="font-size:15px;padding: 0"/>
+                                </f:facet> 
+                                <!--Create a panelGrid for each row in the data scroller-->
+                                <h:panelGrid columns="2" style="width:100%; padding: 0; border-bottom:1.5px solid cadetblue" columnClasses="thumbnail,description">   
+
+                                    <!--Insert the movie thumbnail first-->
+                                    <p:graphicImage value="#{recepie.image}" style="max-width:120%; height:auto; margin: auto auto;padding: 0"/>  
+
+                                    <!--Insert the movie details next-->
+                                    <p:outputPanel>
+
+                                        <!-- 
+                                        This anchor tag will make the panel clickable and will show the dialog box containing detailed movie information
+                                        corresponding to a row in the data scroller.
+                                        -->
+                                        <a class="rowlink" href="javascript:void(0)" onclick="PF('picDialog-#{recepie.id}').show();">
+                                            <h:panelGrid columns="2">
+                                                <p:outputPanel style="margin-left: 20px">
+                                                    <h:panelGrid columns="1" cellpadding="0">
+                                                        <h:outputText value="#{recepie.label}" style="font-size:18px;"/>
+                                                        <p:outputPanel>
+                                                            <p:graphicImage id="caloriesImg" value="resources/images/calories.png" style="width:30px;height:30px"/>&nbsp;
+                                                            <h:outputText id="calories" value="#{recepie.calories}" style="font-size:25px">
+                                                                <f:convertNumber pattern="#####.00"/>
+                                                            </h:outputText>
+                                                            <p:tooltip id="toolTipGrowC" for="calories,caloriesImg" value="Net Calories" trackMouse="true"/>
+                                                            &nbsp; &nbsp; 
+                                                            <p:graphicImage id="servingsImg" value="resources/images/servings.png" style="width:30px;height:30px"/>&nbsp;
+                                                            <h:outputText id="servings" value="#{recepie.yield}" style="font-size:25px"/>
+                                                            <p:tooltip id="toolTipGrowS" for="servings,servingsImg" value="Total Servings" trackMouse="true"/>
+                                                        </p:outputPanel>
+                                                    </h:panelGrid>
+                                                </p:outputPanel>                                                                   
+                                            </h:panelGrid>
+                                        </a>
+                                    </p:outputPanel> 
+                                    <!--End the panelgrid i.e. row containing movie information in the data scroller-->
+                                </h:panelGrid>
+                                <!-- hidden dialog for recipe description -->
+                                <h:form>
+                                    <p:dialog id="picDialog-#{recepie.id}" widgetVar="picDialog-#{recepie.id}" position="center" modal="true" showEffect="fade" closable="false" draggable="false" closeOnEscape="true" hideEffect="fold" resizable="false">  
+
+                                        <f:facet name="header">
+                                            <h:outputText value="#{recepie.label}" style="font-size:20px"/>
+                                        </f:facet>
+                                        <p:panelGrid style="width: 500px" styleClass="fixed-size">
+                                            <p:column rowspan="9" style="text-align: center">
+                                                <p:graphicImage value="#{recepie.image}" style="width:200px"/>
+                                            </p:column>
+                                            <p:row>
+                                                <p:column colspan="1">
+                                                    <p:graphicImage value="resources/images/calories.png" style="text-align:right;float:right;width:50px"/>
+                                                </p:column>
+                                                <p:column colspan="1">
+                                                    <h:outputText value="#{recepie.calories}" style="text-align:left;float:left;font-size:30px">
+                                                        <f:convertNumber pattern="#####.00"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column colspan="1">
+                                                    <p:graphicImage value="resources/images/servings.png" style="text-align:right;float:right;width:50px"/>
+                                                </p:column>
+                                                <p:column colspan="1">
+                                                    <h:outputText value="#{recepie.yield}" style="text-align:left;float:left;font-size:30px"/>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="4" style="text-align:center;">
+                                                    <h:outputText value="Author: #{recepie.source}" style="font-size:15px"/>
+                                                </p:column>                                        
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="4" style="text-align:center;">
+                                                    <a href="#{recepie.url}" target="_blank">
+                                                        <h:outputText id="viewRecipe" value="View recipe" style="font-size:15px"/>
+                                                        <p:tooltip id="toolTipGrowC" for="viewRecipe" value="Opens in new tab" trackMouse="true"/>
+                                                    </a>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="6" style="padding-bottom:0px; font-size: large">
+                                                    <h:outputText value="Diets"/>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="6" style="padding-top:0px">
+                                                    <p:outputPanel>
+                                                        <h:outputText value="#{!empty recepie.dietLabels ? recepie.dietLabels : '-'}"/>  
+                                                    </p:outputPanel>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="6" style="padding-bottom:0px; font-size: large">
+                                                    <h:outputText value="Ingredients" />
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="6" style="padding-top:0px">
+                                                    <p:outputPanel>
+                                                        <h:outputText value="#{!empty recepie.ingredients ? recepie.ingredients.get(0).text : '-'}"/>                                                
+                                                        <h:outputText value="#{recepie.ingredients.size() > 1 ? (', '.concat(recepie.ingredients.get(1).text)) : '' }" />
+                                                        <h:outputText value="#{recepie.ingredients.size() > 2 ? (', '.concat(recepie.ingredients.get(2).text)) : '' }" />
+                                                        <h:outputText value="#{recepie.ingredients.size() > 3 ? (', '.concat(recepie.ingredients.get(3).text)) : '' }" />
+                                                        <h:outputText value="#{recepie.ingredients.size() > 4 ? (', '.concat(recepie.ingredients.get(4).text)) : '' }" />  
+                                                    </p:outputPanel>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="6" style="text-align: center">
+                                                    <p:commandButton value="Back" oncomplete="PF('picDialog-#{recepie.id}').hide();"/>
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                        <!--End of dialog box corresponding to the movie information row-->
+                                    </p:dialog>  
+                                </h:form>
+
+                                <!-- end hidden dialog for recipe description -->
+                            </p:dataScroller>
+                            <p:spacer height="10"/>
+                            <h:form>
+                                <div align="center">
+                                    <p:commandButton rendered="#{not empty recepiesController.foundRecipes}" actionListener="#{recepiesController.buildGroceryList()}" value="Build grocery list" styleClass="commandButton" icon="ui-icon-disk" ajax="false">
+                                        <f:ajax execute="search" render="table"></f:ajax>
+                                    </p:commandButton>
+                                </div>
+                            </h:form>
+                        </h:panelGroup>
+                        <h:panelGroup id="table" rendered="#{not empty recepiesController.computedGroceryList}">
+                            <h:form>
+                                <p:dataTable id="grocerylist" rendered="#{not empty recepiesController.computedGroceryList}" var="groceryItem" value="#{recepiesController.computedGroceryList}" style="width:800px; padding: 0">
+                                    <p:column headerText="Ingredient" style="font-size: 15px;width:400px;padding: 0">
+                                        &nbsp;&nbsp;&nbsp;
+                                        <p:graphicImage value="#{groceryItem.image}" style="width:25px;height: 25px;float: left"/>  
+                                        <h:outputText value="#{groceryItem.name}" />
+                                    </p:column>
+                                    <p:column headerText="Approx. Price" style="font-size: 15px;width:100px;padding: 0">
+                                        <h:outputText value="$ #{groceryItem.cost}&nbsp;&nbsp;&nbsp;" style="float: right"/>
+                                    </p:column>
+                                </p:dataTable>
+                                Save the grocery list to your computer? --->
+                                <h:commandLink id="excel">
+                                    <p:graphicImage value="resources/images/excel.png" />
+                                    <p:dataExporter type="xls" target="grocerylist" fileName="grocerylist"/>
+                                </h:commandLink>
+
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="resources/images/pdf.png" />
+                                    <p:dataExporter type="pdf" target="grocerylist" fileName="grocerylist"/>
+                                </h:commandLink>
+                            </h:form>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </c:if>
+                <c:if test="#{RoommateController.isLoggedIn() == false}">
+                    <p:button styleClass="button" outcome="SignIn" value="Please log in  :)" />
+                </c:if> 
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

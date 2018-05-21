@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created by Meghendra Singh on 2016.11.26 
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!-- Do not enter tags before the composition line since they are ignored by JSF -->
+
+    <ui:composition>
+
+        <p:dialog id="TaskEditDlg" widgetVar="TaskEditDialog" modal="true" resizable="false" 
+                  appendTo="@(body)" header="Edit task">
+
+            <h:form id="TaskEditForm" styleClass="ui-datatable-data">
+
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" cellpadding="8" columnClasses="columnOne, columnTwo">
+
+                        <p:outputLabel value="Task name :" for="taskName" />
+                        <p:inputText id="taskName" value="#{taskController.selected.taskName}" required="true" styleClass="accountInputTextField"
+                                     requiredMessage="Task name is required" label="Task Name">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>   
+
+                        <p:outputLabel value="Task Details :" for="taskDetails" />
+                        <p:inputText id="taskDetails" value="#{taskController.selected.taskDetails}" required="true" styleClass="accountInputTextField"
+                                     requiredMessage="Task details are required" label="Task Details">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>   
+
+                        <p:outputLabel value="Task Location :" for="taskLocation" />
+                        <p:inputText id="taskLocation" value="#{taskController.selected.taskLocation}" required="true" styleClass="accountInputTextField"
+                                     requiredMessage="Task location is required" label="Task Location">
+                            <f:validateLength minimum="2" />
+                        </p:inputText>
+
+                        <p:outputLabel value="Task Deadline :" for="taskDeadline" />
+                        <p:calendar id="taskDeadline" value="#{taskController.selected.taskDeadline}" navigator="true" showButtonPanel="true" effect="slide" mindate="#{taskController.todayDate}" minHour="#{taskController.lastHour}" pattern="MM/dd/yyyy HH:mm" required="false" label="Task Deadline"/>
+
+                        <p:outputLabel value="Task Reminder 1 :" for="taskReminder1" />
+                        <p:calendar id="taskReminder1" value="#{taskController.selected.taskReminder1}" navigator="true" showButtonPanel="true" effect="slide" mindate="#{taskController.todayDate}" minHour="#{taskController.lastHour}" pattern="MM/dd/yyyy HH:mm" required="false" label="Task Reminder 1"/>
+
+                        <p:outputLabel value="Task Reminder 2 :" for="taskReminder2" />
+                        <p:calendar id="taskReminder2" value="#{taskController.selected.taskReminder2}" navigator="true" showButtonPanel="true" effect="slide" mindate="#{taskController.todayDate}" minHour="#{taskController.lastHour}" pattern="MM/dd/yyyy HH:mm" required="false" label="Task Reminder 2"/>
+
+                        <p:outputLabel value="Task Reminder 3 :" for="taskReminder1" />
+                        <p:calendar id="taskReminder3" value="#{taskController.selected.taskReminder3}" navigator="true" showButtonPanel="true" effect="slide" mindate="#{taskController.todayDate}" minHour="#{taskController.lastHour}" pattern="MM/dd/yyyy HH:mm" required="false" label="Task Reminder 3"/>
+
+                        <p:outputLabel for="taskPriority" value="Task Priority :" />
+                        <p:selectOneMenu id="taskPriority" value="#{taskController.selected.taskPriority}" effect="fold" editable="false">
+                            <f:selectItem itemLabel="Low" itemValue="Low" />
+                            <f:selectItem itemLabel="Medium" itemValue="Medium" />
+                            <f:selectItem itemLabel="High" itemValue="High" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <h:panelGroup>
+                    <p:spacer height="10"/>
+                    <div align="center">
+                        <!-- SAVE button -->
+                        <p:commandButton actionListener="#{taskController.updateTask()}" value="Save" 
+                                         styleClass="commandButton" icon="fa fa-pencil" ajax="false"
+                                         update="display,:TaskListForm:datalist,:growl" 
+                                         oncomplete="handleSubmit(args,'TaskEditDialog');"/>
+                        &nbsp;
+                        <!-- CANCEL button -->
+                        <p:commandButton value="Cancel" onclick="PF('TaskEditDialog').hide()"    
+                                         styleClass="commandButton" icon="fa fa-ban" />
+                    </div>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+</html>

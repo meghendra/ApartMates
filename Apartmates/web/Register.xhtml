@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <!-- Do not enter tags before the composition line since they are ignored by JSF -->
+
+    <!-- This page is constructed based on the siteTemplate -->
+    <ui:composition template="template/siteTemplate.xhtml">
+
+        <ui:define name="title">
+            <!-- Set the page title -->
+            <h:outputText value="Create Account"></h:outputText>
+        </ui:define>
+
+        <!-- Create the content for this page below -->
+        <ui:define name="editableContent">
+            
+            <div align="center" style="width:50%; margin:0 auto;">
+
+                <!-- Error messages will be shown here if any  -->
+                <p:messages id="msgs" showIcon="false"/>
+                <h:outputLabel id="form-error-message" class="errorMessages" value="#{RoommatesController.statusMessage}"/>
+
+                    <!-- The different elements of data are displayed/included under this form -->
+                    <h:form id="RegisterForm">
+                        <h2>Create an Account</h2>
+                    
+                        <!-- f:event allows ComponentSystemEventListener instances on a UI component in a JSF page. 
+                        The following f:event assigns an event listener with the UI component "form" - AccountCreationForm.
+
+                        type="postValidate" directs the listener event to invoke the accountManager.validateInformation method
+                        AFTER the UI component "form" is validated with the validation statements included below.
+                        -->
+                        <f:event listener="#{RoommateController.validateInformation}" type="postValidate"/>
+
+                        <p:panelGrid columns="2" columnClasses="columnOne, columnTwo">
+
+                            <p:outputLabel value="#{bundle.CreateRoommate_firstName}" for="firstName" />
+                            <p:inputText id="firstName" value="#{RoommateController.firstName}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateRoommateRequiredMessage_firstName}" label="First Name">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>   
+                            
+                            <p:outputLabel value="#{bundle.CreateRoommate_lastName}" for="lastName" />
+                            <p:inputText id="lastName" value="#{RoommateController.lastName}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateRoommateRequiredMessage_lastName}" label="Last Name">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>  
+                            
+                            <p:outputLabel value="#{bundle.CreateRoommate_email}" for="email" />
+                            <p:inputText id="email" value="#{RoommateController.email}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateRoommateRequiredMessage_email}" label="Email">
+                                <f:validateLength minimum="2" />
+                                <!-- Execute the "validate" method in the "EmailValidator.java" class file to validate the email address entered. -->
+                                <f:validator validatorId="emailValidator" />  
+                            </p:inputText>
+
+                            <p:outputLabel value="#{bundle.CreateRoommate_securityQuestion}" for="securityQuestion" />
+                            <p:selectOneMenu id="securityQuestion" label="Security Questions"
+                                             value="#{RoommateController.securityQuestion}" required="true" >
+                                <f:selectItems value="#{RoommateController.security_questions}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{bundle.CreateRoommate_securityAnswer}" for="securityAnswer" />
+                            <p:inputText id="securityAnswer" value="#{RoommateController.securityAnswer}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateRoommateRequiredMessage_securityAnswer}" label="Security Answer">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <h:outputLabel value="#{bundle.CreateRoommate_password} *" for="password" />
+                            <p:password id="password" value="#{RoommateController.password}" feedback="true" required="true" styleClass="accountInputTextField">
+                                <!-- Execute the "validate" method in the "PasswordValidator.java" class file to validate the password entered. -->
+                                <f:validator validatorId="passwordValidator" /> 
+                            </p:password>
+
+                            <h:outputLabel value="Confirm Password: *" for="confirmPassword" />
+                            <p:password id="confirmPassword" value="ToBeReadFromThisFieldByRoommateController" required="true" styleClass="accountInputTextField"/>
+
+                        </p:panelGrid>
+
+                        <br/>
+                        <p:commandButton id="Submit" value="Register" action="#{RoommateController.createRoommate()}" ajax="false" icon="fa fa-share-square" styleClass="commandButton" />
+                        <p:button outcome="index" value="Cancel" icon="fa fa-ban" styleClass="commandButton"></p:button>
+
+                    </h:form>
+                </div>
+        </ui:define>                
+    </ui:composition>
+</html>

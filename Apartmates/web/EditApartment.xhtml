@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <!-- Do not enter tags before the composition line since they are ignored by JSF -->
+
+    <!-- This page is constructed based on the siteTemplate -->
+    <ui:composition template="template/siteTemplate.xhtml">
+
+        <ui:define name="title">
+            <!-- Set the page title -->
+            <h:outputText value="Edit Apartment"></h:outputText>
+        </ui:define>
+
+        <!-- Create the content for this page below -->
+        <ui:define name="editableContent">
+            
+            <div align="center" style="width:50%; margin:0 auto;">
+
+                <!-- Error messages will be shown here if any  -->
+                <p:messages id="msgs" showIcon="false"/>
+                <h:outputLabel id="form-error-message" class="errorMessages" value="#{ApartmentController.statusMessage}"/>
+
+                    <!-- The different elements of data are displayed/included under this form -->
+                    <h:form id="RegisterForm">
+                        <c:if test="#{RoommateController.isLoggedIn() == true}">
+                        
+                        <h2>Edit Apartment</h2>
+
+                        <p:panelGrid columns="2" columnClasses="columnOne, columnTwo">
+
+                            <p:outputLabel value="#{bundle.CreateApartment_apartmentName}" for="firstName" />
+                            <p:inputText id="firstName" value="#{ApartmentController.selectedApartment.apartmentName}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateApartmentRequiredMessage_apartmentName}" label="Apartment Name">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>   
+                            
+                            <p:outputLabel value="#{bundle.CreateApartment_apartmentAddress}" for="lastName" />
+                            <p:inputText id="lastName" value="#{ApartmentController.selectedApartment.apartmentAddress}" required="true" styleClass="accountInputTextField"
+                                         requiredMessage="#{bundle.CreateApartmentRequiredMessage_apartmentAddress}" label="Apartment Address">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>  
+                            
+                        </p:panelGrid>
+
+                        <br/>
+                        <p:commandButton id="Submit" value="Save" action="#{ApartmentController.updateApartment()}" ajax="false" icon="fa fa-pencil" styleClass="commandButton" />
+                        <p:button outcome="ViewApartment" value="Cancel" icon="fa fa-ban" styleClass="commandButton"></p:button>
+
+                        </c:if>
+                        <c:if test="#{RoommateController.isLoggedIn() == false}">
+                            <p:button outcome="index" value="Please log in  :)" icon="fa fa-sign-in" styleClass="commandButton"/>
+                        </c:if> 
+                    </h:form>
+                </div>
+        </ui:define>                
+    </ui:composition>
+</html>
+

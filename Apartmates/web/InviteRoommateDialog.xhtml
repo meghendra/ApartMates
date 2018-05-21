@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <!-- Display a Confirmation Dialog in which the user enters his/her account password to confirm deletion -->
+        <p:dialog position="center center" id="InviteRoommateDialog" widgetVar="InviteRoommateDialog" modal="true" 
+                  resizable="false" appendTo="@(body)" header="Invite Roommate" >
+            
+            <h:form id="InviteRoommateForm">
+                <!-- Error messages will be shown here if any -->
+                <p:messages id="msgs" showIcon="false"/>
+                <h:outputLabel value="#{RoommateController.statusMessage}" style="font-family: Arial, Helvetica, sans-serif; 
+                               font-size: 12pt; font-style: normal; font-weight: normal; color: #FF0000;" />
+                
+                <p:panel>                
+                    
+                    <h:panelGrid columns="3">
+                        <h:outputLabel value="Email: "/>
+                        
+                        <!-- At least 2 characters to be searched under the selected category are entered here. -->
+                        <p:inputText id="emailInput" value="#{RoommateController.invitedRoommateEmail}" 
+                                     required="true" requiredMessage="Please enter a roommate's email!">
+                            <f:validateLength minimum="2" />
+                            <f:validator validatorId="emailValidator" />  
+                        </p:inputText>
+                        <p:watermark for="emailInput" value="Enter a roommate's email" id="watermark" />
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:spacer height="10"/>
+                        <div align="center">
+                            <!-- SUBMIT button -->
+                            <p:commandButton value="Send Invitation" icon="fa fa-envelope"
+                                             update=":InviteRoommateForm" oncomplete="PF('InviteRoommateDialog').show()" 
+                                             styleClass="commandButton" action="#{RoommateController.inviteRoommate()}" /> 
+                            &nbsp;
+                            <!-- CANCEL button -->
+                            <p:commandButton value="Cancel" onclick="PF('InviteRoommateDialog').hide()"    
+                                             styleClass="commandButton" icon="ui-icon-cancel" />
+                        </div>
+                    </h:panelGroup>
+
+                </p:panel>
+
+            </h:form>
+
+        </p:dialog>
+    </ui:composition>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!-- Do not enter tags before the composition line since they are ignored by JSF -->
+
+    <ui:composition>
+
+        <p:dialog id="TaskViewDlg" widgetVar="TaskViewDialog" modal="true" resizable="false" 
+                  appendTo="@(body)" header="View task">
+
+            <h:form id="TaskViewForm" styleClass="ui-datatable-data">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" columnClasses="columnOne, columnTwo" rendered="#{taskController.selected != null}">
+
+                        <h:outputText value="Task name :"/>
+                        <h:outputText value="#{taskController.selected.taskName}" title="Task name :"/>
+
+                        <h:outputText value="Task Details :"/>
+                        <h:outputText value="#{taskController.selected.taskDetails}" title="Task Details :"/>
+
+                        <h:outputText value="Task Location :"/>
+                        <h:outputText value="#{taskController.selected.taskLocation}" title="Task Location :"/>
+
+                        <h:outputText value="Task Deadline :"/>
+                        <h:outputText value="#{taskController.selected.taskDeadline}" title="Task Deadline :"/>
+
+                        <h:outputText value="Task Reminder 1 :"/>
+                        <h:outputText value="#{taskController.selected.taskReminder1}" title="Task Reminder 1 :"/>
+
+                        <h:outputText value="Task Reminder 2 :"/>
+                        <h:outputText value="#{taskController.selected.taskReminder2}" title="Task Reminder 2 :"/>
+
+                        <h:outputText value="Task Reminder 3 :"/>
+                        <h:outputText value="#{taskController.selected.taskReminder3}" title="Task Reminder 3 :"/>
+
+                        <h:outputText value="Task Priority :"/>
+                        <h:outputText value="#{taskController.selected.taskPriority}" title="Task Priority :"/>
+                        
+                        <h:outputText value="Task Completed :"/>
+                        <h:outputText value="#{taskController.selected.taskIsComplete}" title="Task Completed :"/>
+
+                    </p:panelGrid>
+                </h:panelGroup>
+
+                <h:panelGroup>
+                    <p:spacer height="10"/>
+                    <div align="center">
+                        <!-- CLOSE button -->
+                        <p:commandButton value="Back" onclick="TaskViewDialog.hide()" 
+                                         styleClass="commandButton" icon="fa fa-step-backward"/>
+                    </div>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+</html>
